@@ -1,5 +1,6 @@
 import {Router} from 'express';
 import User from '../models/User.js';
+import bcrypt from 'bcrypt'
 const router = Router() ; 
 
 
@@ -21,11 +22,12 @@ router.post('/login' , (req , res)=>{
 })
 
 router.post('/register', async (req , res)=>{
+    const hashedPassword  = await bcrypt.hash(req.body.password , 10) // parolni hashlash 
     const userData = {
         name : req.body.name ,
         phone : req.body.phone ,
         email : req.body.email ,
-        password : req.body.password 
+        password : hashedPassword 
     }
     const user = await User.create(userData);
    
