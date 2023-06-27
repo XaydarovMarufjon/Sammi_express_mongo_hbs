@@ -2,7 +2,10 @@
 <div class="w-75 mx-auto">
 <h1 class="fs-1">Register</h1>
 {{#if registerError}}
-   <p class="alert alert-danger">{{registerError}}</p> 
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+   <strong>Error message! </strong> {{registerError}}
+   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
 {{/if}}
 <form action="/register" method="post">
      <div class="form-floating mb-3">

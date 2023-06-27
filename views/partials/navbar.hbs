@@ -14,15 +14,30 @@
          <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="/products">Products</a>
         {{/if}}  
 
-
         {{#if isAdd }} 
                  <a class="me-3 py-2 link-body-emphasis" href="/add">Add</a>
         {{else}}
          <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="/add">Add</a>
         {{/if}}  
 
-        <button class="btn btn-primary me-2"> <a class="text-light text-decoration-none" href="/login">Log In</a> </button>
-        <button class="btn btn-success"><a class="text-light text-decoration-none" href="/register">Register</a>  </button>
+      {{#if token}} 
+         <a class="text-light" href="/login">     <button class="btn btn-danger me-2"> Log Out </button></a>
+      {{else}} 
+        
+        {{#if isLogin}}
+         <a class="text-light" href="/login">     <button class="btn btn-primary me-2"> Log In </button></a>
+        {{else}}
+         <a class="text-light text-decoration-none" href="/login">     <button class="btn btn-primary me-2"> Log In </button></a>
+        {{/if}}
+
+        {{#if isRegister}}
+         <a class="text-light" href="/register">  <button class="btn btn-success">Register </button> </a>
+        {{else}}   
+         <a class="text-light text-decoration-none" href="/register">  <button class="btn btn-success">Register </button> </a>
+        {{/if}}
+
+      {{/if}}
+
 
       </nav>
      </div>

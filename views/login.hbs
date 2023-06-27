@@ -2,8 +2,13 @@
 <div class="w-75 mx-auto">
 <h1 class="fs-1">Log In </h1>
 {{#if loginError}}
-   <p class="alert alert-danger">{{loginError}}</p> 
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+   <strong>Error message!</strong>  {{loginError}}
+   <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
 {{/if}}
+
+
 
 <form action="/login" method="post">
     <div class="form-floating mb-3">
