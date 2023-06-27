@@ -1,6 +1,7 @@
 import {Router} from 'express';
 import User from '../models/User.js';
 import bcrypt from 'bcrypt'
+import { generateJWTtoken } from '../sevices/token.service.js';
 const router = Router() ; 
 
 
@@ -28,7 +29,7 @@ router.post('/login' , async (req , res)=>{
         return
     }
 
-    const existUser = await User.findOne({email})
+    const existUser = await User.findOne({email}) // create qilingan  user 
     if (!existUser) {
         req.flash('loginError' , "Bunday foydalanuvchi ro'yhatdan o'tmagan" );
         res.redirect('/login')
@@ -40,8 +41,11 @@ router.post('/login' , async (req , res)=>{
         res.redirect('/login')
         return
     }  
+
+    const token = generateJWTtoken(existUser._id); // token generate qilish ucun modelda yaratilgan id ni beramiz 
+    res.cookie('token' , token , {httpOnly : true , secure : true}) 
     
-    res.redirect('/')
+ res.redirect('/')
 })
 
 router.post('/register', async (req , res)=>{
@@ -61,10 +65,13 @@ router.post('/register', async (req , res)=>{
 
     const hashedPassword  = await bcrypt.hash(password , 10) // parolni hashlash 
     const userData = { name, phone, email, password : hashedPassword }
-    const user = await User.create(userData);
+    const user = await User.create(userData); // userga model create qiladi
+
+    const token = generateJWTtoken(user._id); // token generate qilish ucun modelda yaratilgan id ni beramiz 
+    res.cookie('token' , token , {httpOnly : true , secure : true}) // yaratilgan tokenni cookies ga saqlaymiz
+    console.log(token);
    
   res.redirect('/')
 })
-
 
 export default router
