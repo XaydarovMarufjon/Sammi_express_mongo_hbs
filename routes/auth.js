@@ -6,45 +6,64 @@ const router = Router() ;
 
 router.get('/login' , (req , res)=>{
     res.render('login',  {
-        title : "Login page"
+        title : "Login page", 
+        isLogin : true ,
+        loginError : req.flash('loginError')   
     })
 })
 
 router.get('/register' , (req , res)=>{
     res.render('register' , { 
-        title :"Register page"
+        title :"Register page" , 
+        isRegister : true , 
+        registerError : req.flash("registerError")
     })
 })
 
 router.post('/login' , async (req , res)=>{
-    const existUser = await User.findOne({email: req.body.email})
+    const {email , password} = req.body ;
+    if(!email || !password) {
+        req.flash('loginError' , "Maydonni to'ldiring" );
+        res.redirect('/login')
+        return
+    }
+
+    const existUser = await User.findOne({email})
     if (!existUser) {
-        console.log("User not found");
-        return false;
+        req.flash('loginError' , "Bunday foydalanuvchi ro'yhatdan o'tmagan" );
+        res.redirect('/login')
+        return
     } 
-    const isPassEqual = await bcrypt.compare(req.body.password , existUser.password)
+    const isPassEqual = await bcrypt.compare(password , existUser.password) // login qilishda heshlangan va oddiy parollarni solishtirish 
     if(!isPassEqual) {
-        console.log("Password wrong"); 
-        return falsel;
+        req.flash('loginError' , "Parol xato kiritildi" );
+        res.redirect('/login')
+        return
     }  
     
-    console.log(existUser);
-   
     res.redirect('/')
 })
 
 router.post('/register', async (req , res)=>{
-    const hashedPassword  = await bcrypt.hash(req.body.password , 10) // parolni hashlash 
-    const userData = {
-        name : req.body.name ,
-        phone : req.body.phone ,
-        email : req.body.email ,
-        password : hashedPassword 
+    const {name , phone , email , password} = req.body ;
+
+    if(!name || !phone || !email || !password) {
+        req.flash('registerError', "Maydonni to'ldiring");
+        res.redirect('/register');
+        return
     }
+    const haveUser = await User.findOne({email})
+    if (haveUser) {
+        req.flash(`registerError', "Bunday emaildagi foydalanuvchi ro'yhatdan o'tgan, [ ${email} ]ni ozgartiring`);
+        res.redirect('/register')
+        return
+    }
+
+    const hashedPassword  = await bcrypt.hash(password , 10) // parolni hashlash 
+    const userData = { name, phone, email, password : hashedPassword }
     const user = await User.create(userData);
    
-     console.log(user);
-    res.redirect('/')
+  res.redirect('/')
 })
 
 

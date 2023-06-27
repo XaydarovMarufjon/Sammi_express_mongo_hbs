@@ -1,7 +1,9 @@
 
 <div class="w-75 mx-auto">
 <h1 class="fs-1">Register</h1>
-
+{{#if registerError}}
+   <p class="alert alert-danger">{{registerError}}</p> 
+{{/if}}
 <form action="/register" method="post">
      <div class="form-floating mb-3">
         <input type="text" class="form-control" id="floatingName" name="name" placeholder="Your name">

@@ -1,6 +1,9 @@
 
 <div class="w-75 mx-auto">
 <h1 class="fs-1">Log In </h1>
+{{#if loginError}}
+   <p class="alert alert-danger">{{loginError}}</p> 
+{{/if}}
 
 <form action="/login" method="post">
     <div class="form-floating mb-3">
