@@ -54,7 +54,7 @@ router.post('/register', async (req , res)=>{
     }
     const haveUser = await User.findOne({email})
     if (haveUser) {
-        req.flash(`registerError', "Bunday emaildagi foydalanuvchi ro'yhatdan o'tgan, [ ${email} ]ni ozgartiring`);
+        req.flash(`registerError', "Bunday emaildagi foydalanuvchi ro'yhatdan o'tgan, [ ${email} ]ni o'zgartiring`);
         res.redirect('/register')
         return
     }
