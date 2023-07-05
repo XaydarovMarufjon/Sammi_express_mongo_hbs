@@ -6,6 +6,10 @@ const router = Router() ;
 
 
 router.get('/login' , (req , res)=>{
+    if (req.cookies.token) { // agar foyladanuvchi tizimga kirgan bolsa uni '/login' qismiga jonatmaydi
+        res.redirect('/')     // aksincha bosh sahifaga jonatadi
+        return
+    }
     res.render('login',  {
         title : "Login page", 
         isLogin : true ,
@@ -14,11 +18,20 @@ router.get('/login' , (req , res)=>{
 })
 
 router.get('/register' , (req , res)=>{
+    if (req.cookies.token) {// agar foyladanuvchi tizimga kirgan bolsa uni '/register' qismiga jonatmaydi
+        res.redirect('/')    // aksincha bosh sahifaga jonatadi
+        return
+    }
     res.render('register' , { 
         title :"Register page" , 
         isRegister : true , 
         registerError : req.flash("registerError")
     })
+})
+
+router.get('/logout' , (req, res)=>{
+    res.clearCookie('token');
+    res.redirect('/')
 })
 
 router.post('/login' , async (req , res)=>{
