@@ -69,7 +69,7 @@ router.post('/register', async (req , res)=>{
 
     const token = generateJWTtoken(user._id); // token generate qilish ucun modelda yaratilgan id ni beramiz 
     res.cookie('token' , token , {httpOnly : true , secure : true}) // yaratilgan tokenni cookies ga saqlaymiz
-    console.log(token);
+    console.log(userData);
    
   res.redirect('/')
 })

@@ -21,7 +21,7 @@ router.get('/products' , (req , res)=>{
 router.get('/add' , (req , res)=>{
     res.render('add', { 
         title : "Add" , 
-        isAdd : true
+        isAdd : true ,
     })
 })
 
