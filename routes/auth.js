@@ -1,15 +1,12 @@
 import {Router} from 'express';
 import User from '../models/User.js';
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcrypt';
 import { generateJWTtoken } from '../sevices/token.service.js';
+import signMware from '../middleware/signMware.js';
 const router = Router() ; 
 
 
-router.get('/login' , (req , res)=>{
-    if (req.cookies.token) { // agar foyladanuvchi tizimga kirgan bolsa uni '/login' qismiga jonatmaydi
-        res.redirect('/')     // aksincha bosh sahifaga jonatadi
-        return
-    }
+router.get('/login' , signMware, (req , res)=>{
     res.render('login',  {
         title : "Login page", 
         isLogin : true ,
@@ -17,11 +14,7 @@ router.get('/login' , (req , res)=>{
     })
 })
 
-router.get('/register' , (req , res)=>{
-    if (req.cookies.token) {// agar foyladanuvchi tizimga kirgan bolsa uni '/register' qismiga jonatmaydi
-        res.redirect('/')    // aksincha bosh sahifaga jonatadi
-        return
-    }
+router.get('/register', signMware, (req , res)=>{
     res.render('register' , { 
         title :"Register page" , 
         isRegister : true , 
@@ -35,6 +28,7 @@ router.get('/logout' , (req, res)=>{
 })
 
 router.post('/login' , async (req , res)=>{
+
     const {email , password} = req.body ;
     if(!email || !password) {
         req.flash('loginError' , "Maydonni to'ldiring" );
@@ -48,17 +42,18 @@ router.post('/login' , async (req , res)=>{
         res.redirect('/login')
         return
     } 
+    
     const isPassEqual = await bcrypt.compare(password , existUser.password) // login qilishda heshlangan va oddiy parollarni solishtirish 
     if(!isPassEqual) {
         req.flash('loginError' , "Parol xato kiritildi" );
         res.redirect('/login')
         return
-    }  
+    }   
 
     const token = generateJWTtoken(existUser._id); // token generate qilish ucun modelda yaratilgan id ni beramiz 
     res.cookie('token' , token , {httpOnly : true , secure : true}) 
     
- res.redirect('/')
+    res.redirect('/')
 })
 
 router.post('/register', async (req , res)=>{
@@ -82,9 +77,9 @@ router.post('/register', async (req , res)=>{
 
     const token = generateJWTtoken(user._id); // token generate qilish ucun modelda yaratilgan id ni beramiz 
     res.cookie('token' , token , {httpOnly : true , secure : true}) // yaratilgan tokenni cookies ga saqlaymiz
-    console.log(token);
+    console.log(userData);
    
-  res.redirect('/')
+  res.redirect('/login')
 })
 
 export default router
