@@ -10,9 +10,11 @@ router.get('/' , async (req , res)=>{
     const products = await Product.find().lean()   /// lean methodi baza dannix ffwefwefef malumotlarini json formatiga ogirib beradi
     res.render('index' , {
         title :"Bo$$ Shop ",
-        products : products.reverse() // reverse() yangi qoshilgan narsalarni boshiga chiqaradi 
+        products : products.reverse(), // reverse() yangi qoshilgan narsalarni boshiga chiqaradi 
+        // userId : req.userId ? req.userId.toString : null, 
     })
-    console.log(products);
+    console.log(req.userId );
+
 })
 
 router.get('/products' , (req , res)=>{

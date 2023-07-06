@@ -5,15 +5,18 @@ import ProductsRoutes from './routes/products.js';
 import mongoose from "mongoose";
 import flash from "connect-flash";
 import session from "express-session";
-import varMiddleware from './middleware/var.js';
 import cookieParcer from 'cookie-parser'
 import * as dotenv from 'dotenv';
+// middleWare
+import varMiddleware from './middleware/var.js';
+import userMiddleware from "./middleware/user.js";
+import hbsHelpers from './utils/index.js';
 
 dotenv.config(); // envoirement ishlarish
 
 const app = express();
 
-const hbs = create({ defaultLayout: 'main', extname: 'hbs' })   /// hbsni sozlash 
+const hbs = create({ defaultLayout: 'main', extname: 'hbs' , helpers: hbsHelpers  })   /// hbsni sozlash 
 
 app.engine('hbs', hbs.engine)
 app.set('view engine', 'hbs')    /// hbsni sozlash 
@@ -29,6 +32,7 @@ app.use(cookieParcer())
  app.use(varMiddleware)
 app.use(AuthRoutes)       /// routlarni chaqirib olish uchun ishlaatiladi 
 app.use(ProductsRoutes)
+app.use(userMiddleware)  /// userIdni hohlagan joyda ishlatish uchun usermiddlewareni global holatga otkazdik
 
 // mongoose.set('strictQuery' , false) ;
 
